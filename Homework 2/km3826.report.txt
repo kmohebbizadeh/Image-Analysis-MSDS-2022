@@ -1,0 +1,114 @@
+Initialize:
+
+•	Initialize the auditory folder with dummy, classical, and jobs sub-folders.
+
+    o	The jobs folder will hold the scripts from SPM12
+
+    o	The dummy folder holds the scans that are not considered in this analysis.
+
+    o	The classical folder will hold some of the outputs from our scripts such as design matrices and models used for inference
+
+•	Remove the first 12 scans from consideration and place them in the dummy variable folder.
+
+    o	This is to avoid T1 effects
+
+Realignment:
+
+•	Realigning the images is to correct for motion.
+
+•	When someone is being scanned, it is natural for small shifts and movements between scans. If we were to overlay the images directly on top of each other without realigning, we would get shifts from side to side, up and down and rotational inconsistencies that we did not correct for. These inconsistencies become a problem when overlaying the images and determining areas of activity.
+
+
+•	When we realign, we transform the image to match the images to each other.
+
+•	This way when we overlay the images on each other, we get a consistent detailed picture.
+
+•	Realignment is typically done by selecting recognizable points on a scan and matching them with the other scans spatially.
+
+Co-registration:
+
+•	After the fMRI scans have been aligned in the previous step, now we need to match them with the structural scan.
+
+    o	This scan is also known as an MRI
+
+•	We need to align the fMRI scans with the MRI scan because when we look for what structural components are active, we will not be able to pinpoint the areas without comparison to the structural scans.
+
+•	Co-registration allows us to accurately determine what brain structure is active when comparing to the fMRI data.
+
+•	We do this again by selecting points on the brain and aligning them from one image to another.
+
+Segmentation:
+
+•	This process helps us understand what tissue is where in the scans.
+
+•	There are several tissues we are trying to differentiate in the scan
+
+    o	Cerebrospinal fluid
+
+    o	White matter
+
+    o	Gray matter
+
+    o	Skull
+
+•	This is done in two ways:
+
+    o	Prior knowledge about where each of these tissues lies in a brain
+
+    o	Intensity in the scans. Each scan shows different intensities across the brain which can help determine what tissue is present at that location.
+
+•	This step can be used to remove non-brain tissue, split the scans by the different types of tissues.
+
+•	The information that comes as a result of segmentation can helps answer questions beyond what structure/region of the brain is active, but if there is a difference in the activity based on tissue type.
+
+Normalize:
+
+•	Normalization sets a standard scale =/coordinates on the brain to compare to other studies and scans.
+
+•	 Up to this point, all the work on the brain has been local. That means that we have created a way to analyze a brain, its tissues and look at the effects on just the one individual brain. However, we do not have a way to generalize the exact results and therefore have a detailed comparison between brains.
+
+•	Normalization is what allows for this global comparability.
+
+•	Normalization sets the brain on a standard coordinate system that then allows us to make broader generalizations and comparisons across groups and other studies.
+
+•	The current scale being used is the ICBM152 scale.
+
+    o	This step fits the brain to the standard scale using a 12-parameter comparison
+
+•	It may visually deform the image visually, but allows for this global comparison to take place
+
+Smoothing:
+
+•	Smoothing is applying some type of blurring kernel to the scans
+
+•	Gaussian Kernels are most often used to reduce the noise, while still maintain the edges (boundaries) of the important parts of the scans.
+
+•	This helps the data become more normally distributed.
+
+•	Helps normalize after all the transformations done to normalize the brain scans
+
+•	Smoothing helps cluster together the areas that show the highest activity. Without it, the analyzed image will likely be speckled and patchy which can be difficult to analyze.
+
+Analysis:
+
+•	Broadly speaking about the results of these scripts, we can see that our analysis of the fMRI 	scans is conclusive. We can see specific, defined regions of the brain highlighted during auditory stimuli. If we were to see a speckled, undefined region highlighted it would be more 	difficult to conclude about our analysis.
+
+•	Parameters:
+
+    o	P value = .05
+
+    o	T-test parameter = highlighting the areas that showed more activity listening than resting
+
+•	Looking first at figure 30.13, 30.19 and 30.20 we can get a general understanding of where the brain is active with an auditory stimulus. The region highlighted is most known as the temporal lobe. The temporal lobe is known to be where the brain receives and registers auditory senses. The temporal lobe is located on both sided of the brain slightly behind the ears in an oblong shape. As we can see from our analysis and overlays on the figures listed above, this individual is experiencing brain activity in this particular region during the experiment. In the render or figure 30.20, we can even see a bit of the temporal lobes oblong shape, however, typically the lobe isn’t entirely activated during stimulus and our warping/normalization alters these shapes slightly. The location of the brain activity does match our expectations with regards to auditory stimuli.
+
+•	Now looking at the table present in figure 30.15, we can gather some information, however, this table is best used for a quantitative comparison across various experiments. The table tells us the location of the clusters with an x, y and z coordinate (ICBM 152) as well as the level of activity in each of the clusters. Some clusters show more activity that others. As well as the statistics of the significance and likelihood of variation in clusters found across this study.
+
+Limitations:
+
+•	This is only one individual’s data, so broad generalizations of these findings is not recommended.
+
+•	Different people may have varying results
+
+•	Different parameters in normalization and analysis can result in different findings. For example, if we were to use a different kernel for smoothing, we might find shifts in the areas of interest. Also, if we use different p-values and such for the statistical analysis we might find varying results.
+Km32
+•	Also, this is a curated and complete dataset. If we were to run the script on a different dataset that wasn’t as carefully created, we may get inaccurate results if we do not control for the differences.
