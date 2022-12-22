@@ -1,0 +1,60 @@
+Running Code:
+-
+- There is no specifics for running the code, the relative paths are set to be
+used directly from the unzipped data file provided
+
+Process:
+-
+- first the labels are loaded using the scipy.io package. From here we extract the
+file that has the timeseries labels we need that is marked under the 'label' header
+- this file is formatted as a dataframe so we use ravel to remove the structure
+(remove the brackets) and make it a 1D array usable in the models
+- next we load the scans with the nibable package
+- we then use the nilearn masking function to apply a mask to single out the brain
+in the scans. We se our mask to a pretty specific and rigid structure to assure that
+only the brain is left and non-brain voxels are eliminated. We also use the mask to
+apply some filters (high and low pass filters) to the scans allowing for easier activity
+detection by removing the noise.
+- the next step is to determine if we need PCA. we test different strengths of
+dimensionality reduction to find the optimal level for the data. This can differ
+based on the person and the quality of the scans. We also also check if no pca is
+more accurate than applying the dimensionality reduction.
+- now we tune the SVM model, we do this using randomized-cv function, which works
+by selecting 'n' iterations of the parameters randomly and selecting the best
+set of parameters by running a cross validation on each version of the model.
+Note: the number of folds for cross validation is also tuned in this case.
+- once the best model is selected, the results are reported.
+
+Results:
+-
+- TEST DATA:
+    - Best n value for PCA: 115
+    - Best k for Cross-Validation: 35
+    - Best Parameters: {'kernel': 'linear', 'gamma': 10, 'C': 0.001}
+    - Mean Validation Score for Best Model: 0.9361904761904761
+    - Score for Model: 1.0
+- RETEST DATA:
+    - Best n value for PCA: 145
+    - Best k for Cross-Validation: 45
+    - Best Parameters: {'kernel': 'linear', 'gamma': 100, 'C': 10}
+    - Mean Validation Score for Best Model: 0.8633333333333334
+    - Score for Model: 1.0
+- as we can see the mean validation score is above 85% for both sets and some
+parameters change based on the set that work better with the data.
+- please note that there is some randomization in these models and although i set a
+random seed for consistency, results may slightly differ on different computers,
+versions and environments.
+- since we masked all the images in the first step and we can see that the highest
+accuracy was achieved through PCA as well, we can say that the highest accuracy comes
+with both masking and PCA dimensionality reduction.
+- we can also see that a higher k value seemed to be preferred for higher accuracy.
+
+Limitations:
+-
+- The masking, this masking is coded specifically for this set of scans, if we
+were to get slightly noisier scans or different format, the mask may not work as
+well for a new set of scans.
+- The other limitation with this code is in the PCA value selection, if this code
+were to experience a scan that had a longer time dimension, it would not properly
+examine n_component values.
+
